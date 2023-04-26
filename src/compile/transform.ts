@@ -1,9 +1,14 @@
 import { transformFile } from "@swc/core";
 import { writeFile, mkdir, access, constants } from "node:fs/promises";
 import { Buffer } from "node:buffer";
-import { swcconfig, userConfig, workspaceFolder } from "./compile.js";
+import { swcconfig, workspaceFolder } from "./compile.js";
 import { basename, dirname, join } from "node:path";
 import msgChannel, { OutputLevel } from "../utils/msg-channel.js";
+
+export const userConfig = {
+	outDir: "out",
+	rootDir: "src",
+};
 
 export default async function transform(filePath: string) {
 	try {

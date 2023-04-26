@@ -1,12 +1,13 @@
 import * as vscode from "vscode";
 import { Dirent } from "node:fs";
 import { readdir } from "node:fs/promises";
-import { Options as swcConfig } from "@swc/core/types.js";
+import { Options as swcConfig } from "@swc/core";
 import msgChannel, { OutputLevel } from "../utils/msg-channel.js";
 import statusBar from "../utils/status-bar.js";
 import { isFileModified } from "../utils/helper.js";
+import transform from "./transform.js";
 
-export const userConfig = {
+const userConfig = {
 	outDir: "out",
 	rootDir: "src",
 };
@@ -31,7 +32,6 @@ export const swcconfig: swcConfig = {
 };
 
 export const workspaceFolder = vscode.workspace.workspaceFolders[0].uri.path;
-import transform from "./transform.js";
 
 async function walkDir(source: string) {
 	const dirents: Dirent[] = await readdir(source, { withFileTypes: true });

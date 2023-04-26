@@ -2,9 +2,18 @@
 	"name": "compile-ts",
 	"displayName": "Typescript Compiler",
 	"description": "Ultra fast typescript compiler. Speedup typescript Compile time. Typescript Compiler use swc under the hood. Save valuable time while debug typescript",
-	"version": "0.0.1",
+	"version": "0.0.3",
 	"publisher": "anilkumarum",
 	"license": "MIT",
+	"icon": "icon.png",
+	"preview": true,
+	"bugs": {
+		"url": "https://github.com/anilkumarum/compile-ts.git/issues"
+	},
+	"repository": {
+		"type": "git",
+		"url": "https://github.com/anilkumarum/compile-ts.git"
+	},
 	"author": {
 		"name": "anilkumarum",
 		"url": "https://github.com/anilkumarum"
@@ -20,7 +29,8 @@
 		"ts Compiler"
 	],
 	"categories": [
-		"Other"
+		"Other",
+		"Debuggers"
 	],
 	"galleryBanner": {
 		"color": "#41205f",
@@ -29,13 +39,13 @@
 	"activationEvents": [
 		"onDebug"
 	],
-	"main": "./out/extension",
+	"main": "./out/extension.js",
 	"contributes": {
 		"commands": [
 			{
 				"command": "compilets.compileTs",
 				"title": "Compile rootDir Typescript",
-				"category": "Compiler"
+				"category": "CompileTs"
 			}
 		],
 		"configuration": {
@@ -68,8 +78,8 @@
 		]
 	},
 	"scripts": {
-		"vscode:prepublish": "npm run bundle",
-		"bundle": "esbuild extension.ts --bundle --format=cjs",
+		"vscode:prepublish": "npm run bundle -- --minify",
+		"bundle": "esbuild ./src/extension.ts --bundle --outfile=out/extension.js --external:vscode --loader:.node=copy --format=cjs --platform=node",
 		"compile": "tsc -p ./",
 		"watch": "tsc -watch -p ./"
 	},

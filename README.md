@@ -2,6 +2,10 @@
 
 ---
 
+# Note
+
+This extension is in testing currently. only work on linux
+
 # Features
 
 - Ultra fast typescript compile by swc
