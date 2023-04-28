@@ -1,7 +1,6 @@
 import * as vscode from "vscode";
 import { Dirent } from "node:fs";
 import { readdir } from "node:fs/promises";
-import { Options as swcConfig } from "@swc/core";
 import msgChannel, { OutputLevel } from "../utils/msg-channel.js";
 import statusBar from "../utils/status-bar.js";
 import { isFileModified } from "../utils/helper.js";
@@ -12,24 +11,7 @@ const userConfig = {
 	rootDir: "src",
 };
 
-export const swcconfig: swcConfig = {
-	sourceMaps: false,
-	isModule: true,
-	minify: false,
-	jsc: {
-		parser: {
-			syntax: "typescript",
-		},
-		target: "es2021",
-		transform: {},
-		loose: true,
-		keepClassNames: true,
-	},
-
-	module: {
-		type: "commonjs",
-	},
-};
+export const tscConfig = { compilerOptions: { module: 1, target: 8 } };
 
 export const workspaceFolder = vscode.workspace.workspaceFolders[0].uri.path;
 

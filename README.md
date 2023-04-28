@@ -1,7 +1,5 @@
 # compile typescript by [swc](https://swc.rs/)
 
----
-
 # Note
 
 This extension is in testing currently. only work on linux
