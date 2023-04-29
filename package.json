@@ -2,7 +2,7 @@
 	"name": "compile-ts",
 	"displayName": "Typescript Compiler",
 	"description": "Ultra fast typescript compiler. Speedup typescript Compile time. Typescript Compiler use swc under the hood. Save valuable time while debug typescript",
-	"version": "0.0.4",
+	"version": "0.1.0",
 	"publisher": "anilkumarum",
 	"license": "MIT",
 	"icon": "icon.png",
@@ -45,7 +45,12 @@
 			{
 				"command": "compilets.compileTs",
 				"title": "Compile rootDir Typescript",
-				"category": "CompileTs"
+				"category": "Compilets rootDir"
+			},
+			{
+				"command": "compilets.watchTs",
+				"title": "Activate Watch mode for compile on save",
+				"category": "compilets watch mode"
 			}
 		],
 		"configuration": {
@@ -53,18 +58,42 @@
 			"properties": {
 				"compilets.config.module": {
 					"type": "string",
-					"default": "commonjs",
+					"default": "CommonJS",
 					"enum": [
-						"commonjs",
-						"es6",
-						"nodenext"
+						"CommonJS",
+						"AMD",
+						"UMD",
+						"System",
+						"ES2015",
+						"ES2020",
+						"ES2022",
+						"ESNext",
+						"Node16",
+						"NodeNext"
 					],
 					"description": "Output module type"
 				},
-				"compilets.custom.runCommand": {
+				"compilets.config.rootDirectory": {
+					"type": "array",
+					"default": [
+						"src"
+					],
+					"description": "Defines a rootdirectory to search"
+				},
+				"compilets.config.outDirectory": {
+					"type": "string",
+					"default": "out",
+					"description": "Defines a output directory for output"
+				},
+				"compilets.custom.runCompileCommand": {
 					"type": "string",
 					"default": null,
 					"description": "Add your custom command after compiled rootDir"
+				},
+				"compilets.custom.runWatchCommand": {
+					"type": "string",
+					"default": null,
+					"description": "Add your custom command after file compiled in watch mode"
 				}
 			}
 		},
@@ -74,17 +103,24 @@
 				"key": "ctrl+alt+c",
 				"mac": "cmd+option+c",
 				"when": "editorTextFocus"
+			},
+			{
+				"command": "compilets.watchTs",
+				"key": "ctrl+alt+w",
+				"mac": "cmd+option+w",
+				"when": "editorTextFocus"
 			}
 		]
 	},
 	"scripts": {
-		"vscode:prepublish": "npm run bundle -- --minify",
-		"bundle": "esbuild ./out/extension.js --allow-overwrite --bundle --outfile=out/extension.js --external:vscode --loader:.node=copy --format=cjs --platform=node",
+		"bundle": "esbuild ./out/extension.js --allow-overwrite --bundle --minify --outfile=out/extension.js --external:vscode --loader:.node=copy --format=cjs --platform=node",
 		"compile": "tsc -p ./",
-		"watch": "tsc -watch -p ./"
+		"watch": "tsc -watch -p ./",
+		"test": "node ./test/runTest.js"
 	},
 	"devDependencies": {
-		"@types/node": "^18.16.0",
-		"@types/vscode": "^1.77.0"
+		"@types/node": "^16.17.1",
+		"@types/vscode": "^1.77.0",
+		"@vscode/test-electron": "^2.3.0"
 	}
 }
