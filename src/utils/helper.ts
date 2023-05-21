@@ -16,11 +16,22 @@ export function isFileModified(filePath: string): boolean {
 	}
 }
 
+const septr = process.platform === "win32" ? "\\" : "/";
 export async function getOuputFilePath(workspaceFolder: string, filePath: string): Promise<string> {
-	const fileDir = filePath.slice(filePath.indexOf("/") + 1);
+	let fileDir = filePath.slice(filePath.indexOf(septr) + 1);
+	if (fileDir.startsWith("src")) fileDir = fileDir.slice(fileDir.indexOf(septr) + 1);
 	const dirPath = join(workspaceFolder, userConfig.outDir, dirname(fileDir));
 	const fileName = basename(filePath, ".ts");
 	const outFilePath = join(dirPath, fileName + ".js");
+	await createDirIfNotExist(dirPath);
+	return outFilePath;
+}
+export async function getOutputCopyPath(workspaceFolder: string, filePath: string): Promise<string> {
+	let fileDir = filePath.slice(filePath.indexOf(septr) + 1);
+	if (fileDir.startsWith("src")) fileDir = fileDir.slice(fileDir.indexOf(septr) + 1);
+	const dirPath = join(workspaceFolder, userConfig.outDir, dirname(fileDir));
+	const fileName = basename(filePath);
+	const outFilePath = join(dirPath, fileName);
 	await createDirIfNotExist(dirPath);
 	return outFilePath;
 }

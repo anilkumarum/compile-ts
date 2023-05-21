@@ -1,10 +1,9 @@
 import * as vscode from "vscode";
-import { ExtensionContext } from "vscode";
 import { compileDir, compileOnSave } from "./compile/compile.js";
 import { runCustomCommand } from "./utils/helper.js";
 
 export let storeDb: vscode.Memento;
-export function activate(context: ExtensionContext) {
+export function activate(context: vscode.ExtensionContext) {
 	const disposableCompiler = vscode.commands.registerCommand("compilets.compileTs", async () => {
 		await compileDir();
 		//command run after compile

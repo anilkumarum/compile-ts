@@ -29,11 +29,21 @@ enum ScriptTarget {
 	Latest = 99,
 }
 
+enum JsxEmit {
+	None = 0,
+	Preserve = 1,
+	React = 2,
+	ReactNative = 3,
+	ReactJSX = 4,
+	ReactJSXDev = 5,
+}
+
 type UserConfig = {
 	rootDir: string[];
 	outDir: string;
 	extension: string;
 	module: string;
+	jsx: string;
 	//tscConfig: object;
 };
 
@@ -44,10 +54,15 @@ export const userConfig: UserConfig = {
 	rootDir: configMap.get("rootDirectory"),
 	outDir: configMap.get("outDirectory"),
 	extension: configMap.get("extension"),
+	jsx: configMap.get("jsx"),
 	//tscConfig: configMap.get("tscConfig"),
 };
 
 export const tscConfig = {
-	compilerOptions: { module: ModuleKind[userConfig.module] || 1, target: ScriptTarget.ES2021 },
+	compilerOptions: {
+		module: ModuleKind[userConfig.module] || ModuleKind.Node16,
+		jsx: ModuleKind[userConfig.jsx] || JsxEmit.None,
+		target: ScriptTarget.ES2021,
+	},
 };
 // Object.assign(tscConfig, tscConfig);

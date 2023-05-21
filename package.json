@@ -2,7 +2,7 @@
 	"name": "compile-ts",
 	"displayName": "Typescript Compiler",
 	"description": "Ultra fast typescript compiler. Speedup typescript Compile time. Typescript Compiler use swc under the hood. Save valuable time while debug typescript",
-	"version": "0.1.0",
+	"version": "0.1.2",
 	"publisher": "anilkumarum",
 	"license": "MIT",
 	"icon": "icon.png",
@@ -45,12 +45,12 @@
 			{
 				"command": "compilets.compileTs",
 				"title": "Compile rootDir Typescript",
-				"category": "Compilets rootDir"
+				"category": "Compilets"
 			},
 			{
 				"command": "compilets.watchTs",
 				"title": "Activate Watch mode for compile on save",
-				"category": "compilets watch mode"
+				"category": "compilets"
 			}
 		],
 		"configuration": {
@@ -72,6 +72,19 @@
 						"NodeNext"
 					],
 					"description": "Output module type"
+				},
+				"compilets.config.jsx": {
+					"type": "string",
+					"default": "None",
+					"enum": [
+						"None",
+						"Preserve",
+						"React",
+						"ReactNative",
+						"ReactJSX ",
+						"ReactJSXDev"
+					],
+					"description": "need jsx support?"
 				},
 				"compilets.config.rootDirectory": {
 					"type": "array",
@@ -120,7 +133,6 @@
 	},
 	"devDependencies": {
 		"@types/node": "^16.17.1",
-		"@types/vscode": "^1.77.0",
-		"@vscode/test-electron": "^2.3.0"
+		"@types/vscode": "^1.77.0"
 	}
 }

@@ -1,20 +1,27 @@
 import * as vscode from "vscode";
 import { Dirent } from "node:fs";
-import { readdir } from "node:fs/promises";
+import { readdir, copyFile } from "node:fs/promises";
 import msgChannel, { OutputLevel } from "../utils/msg-channel.js";
+import { getOutputCopyPath, isFileModified } from "../utils/helper.js";
 import statusBar from "../utils/status-bar.js";
-import { isFileModified } from "../utils/helper.js";
-import transform from "./transform.js";
 import { userConfig } from "../utils/config.js";
+import transform from "./transform.js";
 
-async function walkDir(workspaceFolder, source: string) {
+// vscode.workspace.fs.readDirectory;
+async function walkDir(workspaceFolder: string, source: string) {
 	const dirents: Dirent[] = await readdir(workspaceFolder + source, { withFileTypes: true });
 
 	const promises = [];
 	for (const dirent of dirents) {
 		const dirPath = `${source}/${dirent.name}`;
 		if (dirent.isDirectory()) walkDir(workspaceFolder, dirPath);
-		else if (isFileModified(workspaceFolder + dirPath)) promises.push(transform(workspaceFolder, dirPath));
+		else if (isFileModified(workspaceFolder + dirPath)) {
+			if (dirent.name.endsWith(".ts")) promises.push(transform(workspaceFolder, dirPath));
+			else {
+				const outFilePath = await getOutputCopyPath(workspaceFolder, dirPath.slice(1)); //remove "/"
+				promises.push(copyFile(workspaceFolder + dirPath, outFilePath));
+			}
+		}
 	}
 
 	return await Promise.all(promises);
