@@ -6,14 +6,14 @@ import { getOutputCopyPath, isFileModified } from "../utils/helper.js";
 import statusBar from "../utils/status-bar.js";
 import { userConfig } from "../utils/config.js";
 import transform from "./transform.js";
+import path = require("node:path");
 
-// vscode.workspace.fs.readDirectory;
 async function walkDir(workspaceFolder: string, source: string) {
 	const dirents: Dirent[] = await readdir(workspaceFolder + source, { withFileTypes: true });
 
 	const promises = [];
 	for (const dirent of dirents) {
-		const dirPath = `${source}/${dirent.name}`;
+		const dirPath = `${source}${path.sep}${dirent.name}`;
 		if (dirent.isDirectory()) walkDir(workspaceFolder, dirPath);
 		else if (isFileModified(workspaceFolder + dirPath)) {
 			if (dirent.name.endsWith(".ts")) promises.push(transform(workspaceFolder, dirPath));
@@ -31,7 +31,7 @@ export async function compileDir() {
 	statusBar.processing();
 	const workspaceFolder = vscode.workspace.workspaceFolders[0].uri.path;
 	for (const rootDir of userConfig.rootDir) {
-		await walkDir(workspaceFolder, "/" + rootDir).catch((err) => msgChannel.info(err, OutputLevel.Error));
+		await walkDir(workspaceFolder, path.sep + rootDir).catch((err) => msgChannel.info(err, OutputLevel.Error));
 	}
 	statusBar.done();
 }

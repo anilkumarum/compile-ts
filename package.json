@@ -1,8 +1,8 @@
 {
 	"name": "compile-ts",
 	"displayName": "Typescript Compiler",
-	"description": "Ultra fast typescript compiler. Speedup typescript Compile time. Typescript Compiler use swc under the hood. Save valuable time while debug typescript",
-	"version": "0.1.2",
+	"description": "Ultra fast typescript compiler. Speedup typescript Compile time. Save valuable time while debug typescript",
+	"version": "0.1.3",
 	"publisher": "anilkumarum",
 	"license": "MIT",
 	"icon": "icon.png",

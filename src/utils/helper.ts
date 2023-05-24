@@ -1,7 +1,7 @@
 import { storeDb } from "../extension.js";
 import { statSync } from "node:fs";
 import { mkdir, access, constants } from "node:fs/promises";
-import { join, dirname, basename } from "node:path";
+import * as path from "node:path";
 import { userConfig } from "./config.js";
 import * as vscode from "vscode";
 
@@ -16,24 +16,30 @@ export function isFileModified(filePath: string): boolean {
 	}
 }
 
-const septr = process.platform === "win32" ? "\\" : "/";
 export async function getOuputFilePath(workspaceFolder: string, filePath: string): Promise<string> {
-	let fileDir = filePath.slice(filePath.indexOf(septr) + 1);
-	if (fileDir.startsWith("src")) fileDir = fileDir.slice(fileDir.indexOf(septr) + 1);
-	const dirPath = join(workspaceFolder, userConfig.outDir, dirname(fileDir));
-	const fileName = basename(filePath, ".ts");
-	const outFilePath = join(dirPath, fileName + ".js");
+	let fileDir = sliceRootDir(filePath);
+	const dirPath = path.join(workspaceFolder, userConfig.outDir, path.dirname(fileDir));
+	const fileName = path.basename(filePath, ".ts");
+	const outFilePath = path.join(dirPath, fileName + ".js");
 	await createDirIfNotExist(dirPath);
 	return outFilePath;
 }
+
 export async function getOutputCopyPath(workspaceFolder: string, filePath: string): Promise<string> {
-	let fileDir = filePath.slice(filePath.indexOf(septr) + 1);
-	if (fileDir.startsWith("src")) fileDir = fileDir.slice(fileDir.indexOf(septr) + 1);
-	const dirPath = join(workspaceFolder, userConfig.outDir, dirname(fileDir));
-	const fileName = basename(filePath);
-	const outFilePath = join(dirPath, fileName);
+	let fileDir = sliceRootDir(filePath);
+	const dirPath = path.join(workspaceFolder, userConfig.outDir, path.dirname(fileDir));
+	const fileName = path.basename(filePath);
+	const outFilePath = path.join(dirPath, fileName);
 	await createDirIfNotExist(dirPath);
 	return outFilePath;
+}
+
+var rootDir;
+function sliceRootDir(filePath: string) {
+	rootDir ??= userConfig.rootDir[0].split(path.sep);
+	let i = rootDir.length + 1;
+	while (--i) filePath = filePath.slice(filePath.indexOf(path.sep) + 1);
+	return filePath;
 }
 
 async function createDirIfNotExist(dirPath: string) {

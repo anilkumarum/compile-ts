@@ -1,8 +1,9 @@
 let typescriptPath = "/usr/local/lib/node_modules/typescript";
 process.platform === "win32" &&
-	(typescriptPath = `C:\\Users\\${process.env.USER}\\AppData\\Roaming\\npm\\node_modules`);
+	(typescriptPath = `C:\\Users\\${process.env.USERNAME}\\AppData\\Roaming\\npm\\node_modules\\typescript`);
 import { transpileModule } from typescriptPath;
-import { readFile, writeFile } from "node:fs/promises";
+import * as vscode from "vscode";
+import { readFile, writeFile,stat } from "node:fs/promises";
 import { Buffer } from "node:buffer";
 import msgChannel, { OutputLevel } from "../utils/msg-channel.js";
 import { getOuputFilePath } from "../utils/helper.js";
@@ -20,5 +21,14 @@ export default async function transform(workspaceFolder: string, filePath: strin
 		await writeFile(outFilePath, data);
 	} catch (error) {
 		msgChannel.info("cannot compile", OutputLevel.Error);
+	}
+}
+
+export async function checkTsPackageExist(){ 
+	try {
+		const fsStat = await stat(typescriptPath);
+		return fsStat
+	} catch (error) {
+		vscode.window.showErrorMessage('typescript not found globally. try: npm i -g typescript');
 	}
 }

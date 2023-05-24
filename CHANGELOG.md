@@ -5,3 +5,5 @@
 - switch from swc to ts.transpileModule
 
 - copy non-ts file
+
+- window path fix

@@ -21,6 +21,10 @@ class MsgChannel {
 		outputLevel >= userLogLevel && this.#msgChannel.show();
 		this.#msgChannel.appendLine(msg);
 	}
+
+	dispose() {
+		this.#msgChannel.dispose();
+	}
 }
 
 export default new MsgChannel();

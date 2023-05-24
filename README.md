@@ -7,6 +7,10 @@
 - Auto re-compile when ts file saved and restart debugger.
 - add your own custom command after rootDir compiled
 
+# Prerequisite
+
+typescript should install globally on your system.
+
 # How to use
 
 Open command palette by pressing `F1` then start typing "compile typescript" and run suggested command.

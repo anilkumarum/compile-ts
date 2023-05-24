@@ -1,9 +1,16 @@
 import * as vscode from "vscode";
 import { compileDir, compileOnSave } from "./compile/compile.js";
 import { runCustomCommand } from "./utils/helper.js";
+import msgChannel from "./utils/msg-channel.js";
+import { checkTsPackageExist } from "./compile/transform.js";
 
 export let storeDb: vscode.Memento;
-export function activate(context: vscode.ExtensionContext) {
+export async function activate(context: vscode.ExtensionContext) {
+	if (context.workspaceState.get("tsModuleExist")) {
+		const tsPkg = await checkTsPackageExist();
+		if (tsPkg) context.workspaceState.update("tsModuleExist", true);
+	}
+
 	const disposableCompiler = vscode.commands.registerCommand("compilets.compileTs", async () => {
 		await compileDir();
 		//command run after compile
@@ -32,4 +39,8 @@ export function activate(context: vscode.ExtensionContext) {
 	context.subscriptions.push(disposableCompiler);
 	context.subscriptions.push(disposableWatcher);
 	context.subscriptions.push(disposableOnDidSave);
+}
+
+export function deactivate() {
+	msgChannel.dispose();
 }
